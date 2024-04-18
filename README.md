@@ -3,9 +3,13 @@
 **Author Name**: Loai Hasan
 
 
-## WRRC
+## WRRC v1
 
-![WRRC](images/wrrc.jpg)
+![WRRC v1](images/wrrc_v1.jpg)
+
+## WRRC v2
+
+![WRRC v2](images/wrrc_v2.jpg)
 
 
 ## Overview
@@ -53,7 +57,16 @@ node server.js
 
     - **Home ('/')**: returns the moive with the title, poster_path and overview formatted in a json file.
 
+    - **Trending ('/trending')**: returns the trending movies within the last week.
+    
+    - **Search ('/search')**: returns movies that matches the searched name.
+
+    - **Now Playing Movies ('/nowPlayingMovies')**: returns the now playing movies.
+
+    - **Top Rated Movies ('/topRatedMovies')**: returns the top rated movies.
+
     - **Favorite ('/favorite')**.
+
 
 - **Error Handling**: The project includes robust error handling for both client and server errors.
     - **404 Error Handling**: When a page is not found (status code 404), the server responds with a friendly "Page not found" message.
