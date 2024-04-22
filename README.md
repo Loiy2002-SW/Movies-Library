@@ -71,13 +71,13 @@ node server.js
 
          - **Top Rated Movies ('/topRatedMovies')**: returns the top rated movies.
 
-           - **Favorite ('/favorite')**.
+         - **Favorite ('/favorite')**.
 
     2. **Local database**:
 
-           - **Add movie ('/addMovie')**. 
+       - **Add movie ('/addMovie')**. 
 
-           - **Get movies ('/getMovies')**: returns all movies within the moviesList table in movies database.
+       - **Get movies ('/getMovies')**: returns all movies within the moviesList table in movies database.
 
 
 
