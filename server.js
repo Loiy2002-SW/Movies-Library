@@ -1,25 +1,41 @@
 
-
 const express = require('express');
 const cors = require('cors');
 const data = require('./Movie Data/data.json');
 const axios = require('axios').default;
 require('dotenv').config();
 
+
 const myApiKey = process.env.API_KEY;
+
+let url = "postgres://loai:1234@localhost:5432/movies";
+
+
+const {Client} = require('pg');
+let client = new Client(url);
 
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 // Defining the port number for the server to listen on
 const port = 3001;
 
 
-// Starting the server to listen on the 3000 port
+
+client.connect().then(() => {
+
+    // Starting the server to listen on the 3000 port
 app.listen(port, () => {
     console.log(`the server is running on port: ${port}`);
 });
+
+});
+
+//Create movie in the database (add)
+
+
 
 
 // movie constructor
@@ -40,6 +56,69 @@ class Movie2 {
         this.poster_path = poster_path;
         this.overview = overview;
     }
+}
+
+app.post('/addMovie', addMovie);
+app.get('/getMovies', getMovies);
+
+
+function generateId() {
+    // Get current timestamp in milliseconds
+    const timestamp = new Date().getTime();
+    
+    // Generate two random numbers between 0 and 99
+    const randomNum1 = Math.floor(Math.random() * 100);
+    const randomNum2 = Math.floor(Math.random() * 100);
+    
+    // Combine the random numbers and timestamp
+    const combinedId = randomNum1.toString().padStart(2, '0') +
+                      randomNum2.toString().padStart(2, '0') +
+                      timestamp.toString().slice(-3);
+    
+    // Ensure the total length of the ID is 5 characters
+    const id = combinedId.slice(0, 5);
+    
+    return id;
+}
+
+
+
+
+function addMovie(req, res){
+
+    let {title, release_date, overview} = req.body;
+
+    //this is what I meant
+    let id = generateId();
+
+    let sqlQuery = 'INSERT INTO moviesList(id, title, release_date, overview) VALUES($1, $2, $3, $4)';
+    let values = [id, title, release_date, overview];
+
+    client.query(sqlQuery, values).then( () => {
+
+        res.send('Data was added successfully');
+
+    }).catch((e) => {
+        res.send(`Something went wrong, the error: ${e}`);
+    });
+    
+}
+
+function getMovies(req, res){
+
+    
+    let sqlQuery = 'SELECT * FROM moviesList';
+
+    client.query(sqlQuery).then( (reslut) => {
+
+        //console.log(reslut);
+
+        res.json(reslut.rows);
+
+    }).catch((e) => {
+        res.send(`Something went wrong, the error: ${e}`);
+    });
+    
 }
 
 

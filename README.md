@@ -3,13 +3,17 @@
 **Author Name**: Loai Hasan
 
 
-## WRRC v1
+## WRRC (client - server)
 
-![WRRC v1](images/wrrc_v1.jpg)
+![WRRC (client - server)](images/wrrc_v1.jpg)
 
-## WRRC v2
+## WRRC (client - server - 3rd party)
 
-![WRRC v2](images/wrrc_v2.jpg)
+![WRRC (client - server - 3rd party)](images/wrrc_v2.jpg)
+
+## WRRC (client - server - local database)
+
+![WRRC WRRC (client - server - local database)](images/wrrc_v3.jpg)
 
 
 ## Overview
@@ -55,17 +59,26 @@ node server.js
 
 - **API Endpoints**:
 
-    - **Home ('/')**: returns the moive with the title, poster_path and overview formatted in a json file.
+    1. **3rd-party**:
 
-    - **Trending ('/trending')**: returns the trending movies within the last week.
+        - **Home ('/')**: returns the moive with the title, poster_path and overview formatted in a json file.
+
+         - **Trending ('/trending')**: returns the trending movies within the last week.
     
-    - **Search ('/search')**: returns movies that matches the searched name.
+         - **Search ('/search')**: returns movies that matches the searched name.
 
-    - **Now Playing Movies ('/nowPlayingMovies')**: returns the now playing movies.
+         - **Now Playing Movies ('/nowPlayingMovies')**: returns the now playing movies.
 
-    - **Top Rated Movies ('/topRatedMovies')**: returns the top rated movies.
+         - **Top Rated Movies ('/topRatedMovies')**: returns the top rated movies.
 
-    - **Favorite ('/favorite')**.
+           - **Favorite ('/favorite')**.
+
+    2. **Local database**:
+
+           - **Add movie ('/addMovie')**. 
+
+           - **Get movies ('/getMovies')**: returns all movies within the moviesList table in movies database.
+
 
 
 - **Error Handling**: The project includes robust error handling for both client and server errors.
