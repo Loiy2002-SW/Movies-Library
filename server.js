@@ -58,10 +58,53 @@ class Movie2 {
     }
 }
 
-app.post('/addMovie', addMovie);
-app.get('/getMovies', getMovies);
+
+//get
+app.get('/', getMovieFromDummyData);
+app.get('/favorite', getFavorite);
+app.get('/trending', getTrendingMoviesFromTMDB);
+app.get('/search', searchMovieByNameFromTMDB);
+app.get('/nowPlayingMovies', getNowPlayingMoviesFromTMDB);
+app.get('/topRatedMovies', getTopRatedMoviesFromTMDB);
+app.get('/getMovies', getMoviesFromPostgreDB);
+app.get('/getMovie/:id', getMovieByIdFromPostgreDB);
+
+//post
+app.post('/addMovie', addMovieToPostgreDB);
+
+//put
+app.put('/updateMovie/:id', updateMovieByIdInThePostgreDB);
+
+//delete
+app.delete('/deleteMovie/:id', deleteMovieByIdFromThePostgreDB);
 
 
+
+
+
+
+
+
+
+function addMovieToPostgreDB(req, res){
+
+    let {title, release_date, overview} = req.body;
+
+    let id = generateId();
+
+    let sqlQuery = 'INSERT INTO moviesList(id, title, release_date, overview) VALUES($1, $2, $3, $4)';
+    let values = [id, title, release_date, overview];
+
+    client.query(sqlQuery, values).then( () => {
+
+        res.send('Data was added successfully');
+
+    }).catch((e) => {
+        res.send(`Something went wrong, the error: ${e}`);
+    });
+    
+}
+//genete a random id when adding a movie to the database.
 function generateId() {
     // Get current timestamp in milliseconds
     const timestamp = new Date().getTime();
@@ -81,30 +124,7 @@ function generateId() {
     return id;
 }
 
-
-
-
-function addMovie(req, res){
-
-    let {title, release_date, overview} = req.body;
-
-    //this is what I meant
-    let id = generateId();
-
-    let sqlQuery = 'INSERT INTO moviesList(id, title, release_date, overview) VALUES($1, $2, $3, $4)';
-    let values = [id, title, release_date, overview];
-
-    client.query(sqlQuery, values).then( () => {
-
-        res.send('Data was added successfully');
-
-    }).catch((e) => {
-        res.send(`Something went wrong, the error: ${e}`);
-    });
-    
-}
-
-function getMovies(req, res){
+function getMoviesFromPostgreDB(req, res){
 
     
     let sqlQuery = 'SELECT * FROM moviesList';
@@ -121,28 +141,21 @@ function getMovies(req, res){
     
 }
 
-
-// Setting up a route for the root URL
-app.get('/', (req, res) => {
+function getMovieFromDummyData(req, res){
 
     let result = new Movie(data.title, data.poster_path, data.overview);
 
     res.json(result);
 
-});
+}
 
-
-// Setting up a route for the favorite URL
-app.get('/favorite', (req, res) => {
+function getFavorite(req, res){
 
     res.send('Welcome to Favorite Page');
 
-});
+}
 
-
-
-// Setting up a route for the trending movies URL
-app.get('/trending', (req, res) => {
+function getTrendingMoviesFromTMDB(req, res){
 
     const url = `https://api.themoviedb.org/3/trending/all/week?api_key=${myApiKey}`;
     try{
@@ -162,11 +175,9 @@ app.get('/trending', (req, res) => {
         handleError500(error,req,res);
     }
  
-});
+}
 
-
-// Setting up a route for 'searching in movies' URL
-app.get('/search', (req, res) => {
+function searchMovieByNameFromTMDB(req, res){
 
     let queryName = req.query.movieName;
 
@@ -184,10 +195,9 @@ app.get('/search', (req, res) => {
     .catch(error => {
         console.log(error);
     });
-});
+}
 
-// Setting up a route for 'now playing movies' URL
-app.get('/nowPlayingMovies', (req, res) => {
+function getNowPlayingMoviesFromTMDB(req, res){
 
     let url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${myApiKey}`;
     axios.get(url).then(reslut => {
@@ -202,10 +212,9 @@ app.get('/nowPlayingMovies', (req, res) => {
     .catch(error =>{
     console.log(error)
 });
-});
+}
 
-// Setting up a route for 'top rated movies' URL
-app.get('/topRatedMovies', (req, res) => {
+function getTopRatedMoviesFromTMDB(req, res){
 
     let url = `https://api.themoviedb.org/3/movie/top_rated?api_key=${myApiKey}`;
     axios.get(url).then(reslut => {
@@ -220,7 +229,80 @@ app.get('/topRatedMovies', (req, res) => {
     .catch(error =>{
     console.log(error)
 });
-});
+}
+
+function getMovieByIdFromPostgreDB(req, res) {
+    let movieId = req.params.id; 
+    
+    let sqlQuery = 'SELECT * FROM moviesList WHERE id = $1'; 
+
+    client.query(sqlQuery, [movieId]).then((result) => {
+        if (result.rows.length === 0) {
+            res.status(404).json({ error: 'Movie not found' });
+        } else {
+            res.json(result.rows[0]); 
+        }
+    }).catch((e) => {
+        res.status(500).send(`Something went wrong,${e}`);
+    });
+}
+
+function updateMovieByIdInThePostgreDB(req, res){
+
+    let movieId = req.params.id;
+
+    //new data, you should send them with the body of the request.
+    console.log(req.body);
+    if(!req.body.title || !req.body.release_date || !req.body.overview){
+        res.send('The body shouldn\'t be undefined, please enter the new data to update the movie');
+    }
+        
+        let {title, release_date, overview} = req.body;
+   
+    let updateSQL = 'UPDATE moviesList SET title = $1, release_date = $2, overview = $3 WHERE id = $4';
+
+    let values = [title, release_date, overview, movieId];
+
+    client.query(updateSQL, values).then((result) => {
+
+        if (result.rowCount === 0) {
+            //movie not found
+            res.status(404).json({ error: 'Movie not found' });
+        } else {
+            // successfully updated
+            res.json({ message: 'Movie updated successfully' });
+        }
+    }).catch((e) => {
+        // Error occurred while updating
+        res.status(500).send(`Something went wrong, ${e}`);
+    });
+
+}
+
+function deleteMovieByIdFromThePostgreDB(req, res){
+
+    let movieId = req.params.id;
+
+    let sqlQuery = "DELETE FROM moviesList WHERE id = $1";
+
+    client.query(sqlQuery,[movieId]).then((result) => {
+
+        if (result.rowCount === 0) {
+            // No rows were deleted, movie not found
+            res.status(404).json({ error: 'Movie not found' });
+        } else {
+            // Movie successfully deleted
+            res.json({ message: 'Movie deleted successfully' });
+        }
+
+    }).catch((e) => {
+        // Error occurred while deleting the movie
+        res.status(500).send(`Something went wrong, ${e}`);
+    });
+
+}
+
+
 
 
 //Handling 500 status code error
