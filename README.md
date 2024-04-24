@@ -83,11 +83,11 @@ node server.js
 
        - **Get movies ('/getMovies')**: returns all movies within the moviesList table in movies database.
 
-           - **Get movie ('/getMovie/:id')**: returns the movie with the matched id.
+       - **Get movie ('/getMovie/:id')**: returns the movie with the matched id.
            
-           - **Update movie ('/updateMovie/:id')**: updates the movie with the matched id.
+       - **Update movie ('/updateMovie/:id')**: updates the movie with the matched id.
 
-           - **Delete movie ('/deleteMovie/:id')**: deletes the movie with the matched id.
+       - **Delete movie ('/deleteMovie/:id')**: deletes the movie with the matched id.
 
 
 
