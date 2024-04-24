@@ -11,9 +11,13 @@
 
 ![WRRC (client - server - 3rd party)](images/wrrc_v2.jpg)
 
-## WRRC (client - server - local database)
+## WRRC (client - server - local database) (GET, ADD)
 
-![WRRC WRRC (client - server - local database)](images/wrrc_v3.jpg)
+![WRRC (client - server - local database) (GET, ADD)](images/wrrc_v3.jpg)
+
+## WRRC (client - server - local database) (CRUD)
+
+![WRRC (client - server - local database) (CRUD)](images/wrrc_v4.jpg)
 
 
 ## Overview
@@ -78,6 +82,12 @@ node server.js
        - **Add movie ('/addMovie')**. 
 
        - **Get movies ('/getMovies')**: returns all movies within the moviesList table in movies database.
+
+           - **Get movie ('/getMovie/:id')**: returns the movie with the matched id.
+           
+           - **Update movie ('/updateMovie/:id')**: updates the movie with the matched id.
+
+           - **Delete movie ('/deleteMovie/:id')**: deletes the movie with the matched id.
 
 
 
