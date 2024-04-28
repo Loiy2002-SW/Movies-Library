@@ -7,8 +7,7 @@ require('dotenv').config();
 
 
 const myApiKey = process.env.API_KEY;
-
-let url = "postgres://loai:1234@localhost:5432/movies";
+const url = process.env.URL_PG;
 
 
 const {Client} = require('pg');
