@@ -305,17 +305,10 @@ function deleteMovieByIdFromThePostgreDB(req, res){
 
 
 //Handling 500 status code error
-app.use((err, req, res, next) => {
-    handleError500(err, req, res);
-});
-
+app.use((err, req, res, next) => {handleError500(err, req, res);});
 
 //Handling 404 status code error (NOT Found)
-app.use((req, res) => {
-
-    handleError404(req, res);
-
-});
+app.use((req, res) => {handleError404(req, res);});
 
 
 function handleError500(err,req,res){
