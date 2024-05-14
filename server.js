@@ -296,7 +296,7 @@ function updatecomment(req, res){
     let movieId = req.params.id;
 
     //new data, you should send them with the body of the request.
-    if(!req.body.title || !req.body.release_date || !req.body.overview){
+    if(!req.body.comment){
         res.send('The body shouldn\'t be undefined, please enter the new data to update the movie');
     }
         
