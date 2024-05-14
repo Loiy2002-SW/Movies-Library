@@ -304,7 +304,7 @@ function updatecomment(req, res){
    
     let updateSQL = 'UPDATE favoritelist SET comment = $1 WHERE id = $2';
 
-    let values = [comment, id];
+    let values = [comment, movieId];
 
     client.query(updateSQL, values).then((result) => {
 
