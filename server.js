@@ -60,7 +60,7 @@ class Movie2 {
 
 //get
 app.get('/', getMovieFromDummyData);
-app.get('/favorite', getFavorite);
+app.get('/getFavorite', getFavorite);
 app.get('/trending', getTrendingMoviesFromTMDB);
 app.get('/search', searchMovieByNameFromTMDB);
 app.get('/nowPlayingMovies', getNowPlayingMoviesFromTMDB);
@@ -87,12 +87,12 @@ app.delete('/deleteMovie/:id', deleteMovieByIdFromThePostgreDB);
 
 function addMovieToPostgreDB(req, res){
 
-    let {title, release_date, overview} = req.body;
+    let {title, release_date, poster_path, overview, comment} = req.body;
 
     let id = generateId();
 
-    let sqlQuery = 'INSERT INTO moviesList(id, title, release_date, overview) VALUES($1, $2, $3, $4)';
-    let values = [id, title, release_date, overview];
+    let sqlQuery = 'INSERT INTO favoritelist(id, title, release_date, poster_path, overview, comment) VALUES($1, $2, $3, $4, $5, $6)';
+    let values = [id, title, release_date, poster_path, overview, comment];
 
     client.query(sqlQuery, values).then( () => {
 
@@ -150,7 +150,17 @@ function getMovieFromDummyData(req, res){
 
 function getFavorite(req, res){
 
-    res.send('Welcome to Favorite Page');
+    let sqlQuery = 'SELECT * FROM favoritelist';
+
+    client.query(sqlQuery).then( (reslut) => {
+
+        console.log(reslut);
+
+        res.json(reslut.rows);
+
+    }).catch((e) => {
+        res.send(`Something went wrong, the error: ${e}`);
+    });
 
 }
 
