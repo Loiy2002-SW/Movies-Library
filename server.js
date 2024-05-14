@@ -76,6 +76,7 @@ app.put('/updateMovie/:id', updateMovieByIdInThePostgreDB);
 
 //delete
 app.delete('/deleteMovie/:id', deleteMovieByIdFromThePostgreDB);
+app.get('/deleteFavorite/:id', deleteFavorite);
 
 
 
@@ -293,6 +294,29 @@ function deleteMovieByIdFromThePostgreDB(req, res){
     let movieId = req.params.id;
 
     let sqlQuery = "DELETE FROM moviesList WHERE id = $1";
+
+    client.query(sqlQuery,[movieId]).then((result) => {
+
+        if (result.rowCount === 0) {
+            // No rows were deleted, movie not found
+            res.status(404).json({ error: 'Movie not found' });
+        } else {
+            // Movie successfully deleted
+            res.json({ message: 'Movie deleted successfully' });
+        }
+
+    }).catch((e) => {
+        // Error occurred while deleting the movie
+        res.status(500).send(`Something went wrong, ${e}`);
+    });
+
+}
+
+function deleteFavorite(req, res){
+
+    let movieId = req.params.id;
+
+    let sqlQuery = "DELETE FROM favoritelist WHERE id = $1";
 
     client.query(sqlQuery,[movieId]).then((result) => {
 
