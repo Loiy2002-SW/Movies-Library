@@ -76,7 +76,7 @@ app.put('/updateMovie/:id', updateMovieByIdInThePostgreDB);
 
 //delete
 app.delete('/deleteMovie/:id', deleteMovieByIdFromThePostgreDB);
-app.get('/deleteFavorite/:id', deleteFavorite);
+app.delete('/deleteFavorite/:id', deleteFavorite);
 
 
 
