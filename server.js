@@ -73,6 +73,7 @@ app.post('/addMovie', addMovieToPostgreDB);
 
 //put
 app.put('/updateMovie/:id', updateMovieByIdInThePostgreDB);
+app.put('/updatecomment/:id', updatecomment);
 
 //delete
 app.delete('/deleteMovie/:id', deleteMovieByIdFromThePostgreDB);
@@ -272,6 +273,38 @@ function updateMovieByIdInThePostgreDB(req, res){
     let updateSQL = 'UPDATE moviesList SET title = $1, release_date = $2, overview = $3 WHERE id = $4';
 
     let values = [title, release_date, overview, movieId];
+
+    client.query(updateSQL, values).then((result) => {
+
+        if (result.rowCount === 0) {
+            //movie not found
+            res.status(404).json({ error: 'Movie not found' });
+        } else {
+            // successfully updated
+            res.json({ message: 'Movie updated successfully' });
+        }
+    }).catch((e) => {
+        // Error occurred while updating
+        res.status(500).send(`Something went wrong, ${e}`);
+    });
+
+}
+
+
+function updatecomment(req, res){
+
+    let movieId = req.params.id;
+
+    //new data, you should send them with the body of the request.
+    if(!req.body.title || !req.body.release_date || !req.body.overview){
+        res.send('The body shouldn\'t be undefined, please enter the new data to update the movie');
+    }
+        
+        let comment = req.body.comment;
+   
+    let updateSQL = 'UPDATE favoritelist SET comment = $1 WHERE id = $2';
+
+    let values = [comment, id];
 
     client.query(updateSQL, values).then((result) => {
 
