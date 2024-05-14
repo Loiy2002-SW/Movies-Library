@@ -89,9 +89,9 @@ app.delete('/deleteFavorite/:id', deleteFavorite);
 
 function addMovieToPostgreDB(req, res){
 
-    let {title, release_date, poster_path, overview, comment} = req.body;
+    let {id, title, release_date, poster_path, overview, comment} = req.body;
 
-    let id = generateId();
+    //let id = generateId();
 
     let sqlQuery = 'INSERT INTO favoritelist(id, title, release_date, poster_path, overview, comment) VALUES($1, $2, $3, $4, $5, $6)';
     let values = [id, title, release_date, poster_path, overview, comment];

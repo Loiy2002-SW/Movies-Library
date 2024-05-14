@@ -1,6 +1,6 @@
 CREATE TABLE moviesList (
 
-id SERIAL PRIMARY KEY,
+id Number PRIMARY KEY,
 title varchar(255),
 poster_path varchar(255),
 release_date varchar(255),
